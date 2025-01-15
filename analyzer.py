@@ -10,13 +10,19 @@ class Window(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Text Analyzer")
-        layout = QHBoxLayout()
+        layout1 = QVBoxLayout()
+        layout2 = QHBoxLayout()
 
         self.input_text = QPlainTextEdit()
-        layout.addWidget(self.input_text)
+        layout1.addWidget(self.input_text)
+        layout2.addLayout(layout1)
+
+        self.go_button = QPushButton("Analyze")
+        layout2.addWidget(self.go_button)
+
 
         widget = QWidget()
-        widget.setLayout(layout)
+        widget.setLayout(layout2)
         self.setCentralWidget(widget)
     
 application = QApplication(sys.argv)
