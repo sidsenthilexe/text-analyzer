@@ -13,40 +13,61 @@ def read_text(text, metric_type):
         fk = readability_analyze.flesch_kincaid()
         score = fk.score
         grade_level = fk.grade_level
+        ease = "N/A"
+        ages = "N/A"
     elif metric_type == "Flesch Reading Ease":
         f = readability_analyze.flesch()
         score = f.score
         ease = f.ease
         grade_level = f.grade_levels
+        ages = "N/A"
     elif metric_type == "Dale Chall Readability":
         dc = readability_analyze.dale_chall()
         score = dc.score
         grade_level = dc.grade_levels
+        ease = "N/A"
+        ages = "N/A"
     elif metric_type == "Automated Readability Index":
         ari = readability_analyze.ari()
         score = ari.score
         ages = ari.ages
         grade_level = ari.grade_levels
+        ease = "N/A"
     elif metric_type == "Coleman Liau Index":
         cl = readability_analyze.coleman_liau()
         score = cl.score
         grade_level = cl.grade_level
+        ease = "N/A"
+        ages = "N/A"
     elif metric_type == "Gunning Fog Index":
         gf = readability_analyze.gunning_fog()
         score = gf.score
         grade_level = gf.grade_level
+        ease = "N/A"
+        ages = "N/A"
     elif metric_type == "SMOG Index":
         smog = readability_analyze.smog(all_sentences=True)
         score = smog.score
         grade_level = smog.grade_level
+        ease = "N/A"
+        ages = "N/A"
     elif metric_type == "SPACHE Readability Formula":
         spache = readability_analyze.spache()
         score = spache.score
         grade_level = spache.grade_level
+        ease = "N/A"
+        ages = "N/A"
     elif metric_type == "Linsear Write":
         lw = readability_analyze.linsear_write()
         score = lw.score
         grade_level = lw.grade_level
+        ease = "N/A"
+        ages = "N/A"
+    print(score)
+    print(grade_level)
+    print(ease)
+    print(ages)
+    
 
 class Window(QMainWindow):
     def __init__(self):
@@ -76,6 +97,14 @@ class Window(QMainWindow):
         widget = QWidget()
         widget.setLayout(row1)
         self.setCentralWidget(widget)
+    
+    def transfer_to_read(self):
+        self.input_metric.blockSignals(True)
+        input_text_transfer = self.input_text.toPlainText()
+        input_metric_transfer = self.input_metric.currentText()
+
+        read_text(input_text_transfer, input_metric_transfer)
+
     
 application = QApplication(sys.argv)
 window = Window()
