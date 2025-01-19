@@ -1,4 +1,5 @@
 # text analyzer in python
+# to do: import ntlk
 
 from readability import Readability
 import sys
@@ -86,6 +87,7 @@ class Window(QMainWindow):
 
         self.go_button = QPushButton("Analyze")
         column2.addWidget(self.go_button)
+        self.go_button.clicked.connect(self.transfer_to_read)
 
         self.input_metric = QComboBox()
         self.input_metric.addItems(["Flesch-Kinaid Grade Level", "Flesch Reading Ease", "Dale Chall Readability", "Automated Readability Index", "Coleman Liau Index", "Gunning Fog Index", "SMOG Index", "SPACHE Readability Formula", "Linsear Write"])
