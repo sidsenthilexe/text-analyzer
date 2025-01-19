@@ -1,5 +1,4 @@
 # text analyzer in python
-# to do: import ntlk
 
 import nltk
 nltk.download('punkt_tab')
@@ -12,7 +11,7 @@ def read_text(text, metric_type):
     
     readability_analyze = Readability(text)
 
-    if metric_type == "Flesch-Kinaid Grade Level":
+    if metric_type == "Flesch-Kincaid Grade Level":
         fk = readability_analyze.flesch_kincaid()
         score = fk.score
         grade_level = fk.grade_level
@@ -92,7 +91,7 @@ class Window(QMainWindow):
         self.go_button.clicked.connect(self.transfer_to_read)
 
         self.input_metric = QComboBox()
-        self.input_metric.addItems(["Flesch-Kinaid Grade Level", "Flesch Reading Ease", "Dale Chall Readability", "Automated Readability Index", "Coleman Liau Index", "Gunning Fog Index", "SMOG Index", "SPACHE Readability Formula", "Linsear Write"])
+        self.input_metric.addItems(["Flesch-Kincaid Grade Level", "Flesch Reading Ease", "Dale Chall Readability", "Automated Readability Index", "Coleman Liau Index", "Gunning Fog Index", "SMOG Index", "SPACHE Readability Formula", "Linsear Write"])
         column2.addWidget(self.input_metric)
 
 
