@@ -1,6 +1,8 @@
 # text analyzer in python
 # to do: import ntlk
 
+import nltk
+nltk.download('punkt_tab')
 from readability import Readability
 import sys
 from PySide6.QtCore import (QSize, Qt)
