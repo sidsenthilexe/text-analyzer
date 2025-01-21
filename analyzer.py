@@ -65,11 +65,24 @@ def read_text(text, metric_type):
         grade_level = lw.grade_level
         ease = "N/A"
         ages = "N/A"
+
+    word_count = len(text.split())
+    char_count = len(text)
+    
     print(score)
     print(grade_level)
     print(ease)
     print(ages)
+    print(word_count)
+    print(char_count)
     
+class HelpWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        layout = QVBoxLayout()
+        self.label = QLabel("HelpWindow")
+        layout.addWidget(self.label)
+        self.setLayout(layout)
 
 class Window(QMainWindow):
     def __init__(self):
@@ -93,6 +106,11 @@ class Window(QMainWindow):
         self.input_metric = QComboBox()
         self.input_metric.addItems(["Flesch-Kincaid Grade Level", "Flesch Reading Ease", "Dale Chall Readability", "Automated Readability Index", "Coleman Liau Index", "Gunning Fog Index", "SMOG Index", "SPACHE Readability Formula", "Linsear Write"])
         column2.addWidget(self.input_metric)
+        
+        self.help_button = QPushButton("Help")
+        column2.addWidget(self.help_button)
+        self.help_button.clicked.connect(self.show_help_window)
+
 
 
 
@@ -107,8 +125,13 @@ class Window(QMainWindow):
         input_metric_transfer = self.input_metric.currentText()
 
         read_text(input_text_transfer, input_metric_transfer)
-
     
+    def show_help_window(self, checked):
+        transfer_window = HelpWindow()
+        transfer_window.show()
+
+
+
 application = QApplication(sys.argv)
 window = Window()
 window.show()
