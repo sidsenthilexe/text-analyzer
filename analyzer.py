@@ -7,6 +7,7 @@ nltk.download('punkt_tab')
 from PySide6.QtCore import (QSize, Qt)
 from PySide6.QtWidgets import (QApplication, QWidget, QMainWindow, QPlainTextEdit, QComboBox, QLineEdit, QLabel, QHBoxLayout, QVBoxLayout, QPushButton, QCheckBox)
 
+
 def read_text(text, metric_type):
     
     readability_analyze = Readability(text)
@@ -49,7 +50,7 @@ def read_text(text, metric_type):
             score = smog.score
             grade_level = smog.grade_level
             ease, ages = 'N/A'
-        case 'SPACHE Readability Formula':
+        case 'Spache Readability Formula':
             spache = readability_analyze.spache()
             score = spache.score
             grade_level = spache.grade_level
@@ -59,6 +60,8 @@ def read_text(text, metric_type):
             score = lw.score
             grade_level = lw.grade_level
             ease, ages = 'N/A'
+        case _:
+            score. grade_level, ease, ages = 'N/A'
 
     word_count = len(text.split())
     char_count = len(text)
@@ -71,37 +74,47 @@ def read_text(text, metric_type):
     print(char_count)
 
 def change_help_text(type):
-       match type:
+    match type:
         case 'Flesch-Kincaid Grade Level':
-            pass
+            help_text = 'Flesch-Kincaid is based on the length of words and sentences in the text. It is based off grade levels in terms of the American education system.'
         case 'Flesch Reading Ease':
-            pass
+            help_text = 'Flesch Reading Ease scores a text from 1-100 based on sentence and word lengths. Scoring between 70 and 80 is roughly equivalent to an 8th grade level.'
         case 'Dale Chall Readability':
-            pass
+            help_text = 'Dale Chall Readability utilises a list of 3,000 common words to calculate the amount of difficult words in a text. A score of 6-7 is easily understood by a 7th or 8th grader.'
         case 'Automated Readability Index':
-           pass
+            help_text = 'The ARI uses a factor of characters per word, and the score is approximately the grade level needed to understand the text.'
         case 'Coleman Liau Index':
-            pass
+            help_text = 'The Coleman Liau Index uses the average number of letters and sentences per 100 words to approximate the grade level needed to understand the text.'
         case 'Gunning Fog Index':
-            pass
+            help_text = 'The Gunning Fog Index attempts to estimate the number of years of education necessary to understand a text based on average sentence length and the number of complex words.'
         case 'SMOG Index':
-            pass
-        case 'SPACHE Readability Formula':
-            pass
+            help_text = 'The SMOG Index estimates the number of years of education necessary to understand a text based on the number of words with more than 2 syllables.'
+        case 'Spache Readability Formula':
+            help_text = 'The Spache Readability Formula compares a set of common words to the words in a text. The score is calculated based on the number of words per sentence and the percentage of unfamiliar words.'
         case 'Linsear Write':
-            pass
-    
+            help_text = 'Linsear Write estimates the grade level of a text based on sentence length and the number of words with 2 or more syllables.'
+        case _ :
+            help_text = 'hi'
+    return help_text
 
 class HelpWindow(QWidget):
     def __init__(self):
         super().__init__()
         layout = QVBoxLayout()
         self.type_select = QComboBox()
-        self.type_select.addItems(['Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'SPACHE Readability Formula', 'Linsear Write'])
+        self.type_select.addItems(['Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'Spache Readability Formula', 'Linsear Write'])
         layout.addWidget(self.type_select)
-        #self.type_select.currentTextChanged(change_help_text(self.type_select.currentText))
+        self.type_select.currentTextChanged.connect(self.help_text_update(self.type_select.currentText))
+        
+        help_output = change_help_text(self.type_select.currentText)
+        self.help_output_text = QLabel()
+        self.help_output_text.setText(help_output)
+        layout.addWidget(self.help_output_text)
 
         self.setLayout(layout)
+    
+    def help_text_update(input):
+        change_help_text(input)
     
     
         
