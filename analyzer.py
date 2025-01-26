@@ -65,7 +65,7 @@ def read_text(text, metric_type):
 
     word_count = len(text.split())
     char_count = len(text)
-    
+
     print(score)
     print(grade_level)
     print(ease)
@@ -73,26 +73,32 @@ def read_text(text, metric_type):
     print(word_count)
     print(char_count)
 
+    output = [score, grade_level, ease, ages, word_count, char_count]
+
+    return output
+
+    
+
 def change_help_text(type):
     match type:
         case 'Flesch-Kincaid Grade Level':
-            help_text = 'Flesch-Kincaid is based on the length of words and sentences in the text. It is based off grade levels in terms of the American education system.'
+            help_text = 'Flesch-Kincaid is based on the length of words and sentences in the text.\nIt is based off grade levels in terms of the American education system.'
         case 'Flesch Reading Ease':
-            help_text = 'Flesch Reading Ease scores a text from 1-100 based on sentence and word lengths. Scoring between 70 and 80 is roughly equivalent to an 8th grade level.'
+            help_text = 'Flesch Reading Ease scores a text from 1-100 based on sentence and word lengths.\nScoring between 70 and 80 is roughly equivalent to an 8th grade level.'
         case 'Dale Chall Readability':
-            help_text = 'Dale Chall Readability utilises a list of 3,000 common words to calculate the amount of difficult words in a text. A score of 6-7 is easily understood by a 7th or 8th grader.'
+            help_text = 'Dale Chall Readability utilises a list of 3,000 common words to calculate\nthe amount of difficult words in a text. A score of 6-7 is easily understood\nby a 7th or 8th grader.'
         case 'Automated Readability Index':
-            help_text = 'The ARI uses a factor of characters per word, and the score is approximately the grade level needed to understand the text.'
+            help_text = 'The ARI uses a factor of characters per word, and the score is approximately\nthe grade level needed to understand the text.'
         case 'Coleman Liau Index':
-            help_text = 'The Coleman Liau Index uses the average number of letters and sentences per 100 words to approximate the grade level needed to understand the text.'
+            help_text = 'The Coleman Liau Index uses the average number of letters and sentences per 100\nwords to approximate the grade level needed to understand the text.'
         case 'Gunning Fog Index':
-            help_text = 'The Gunning Fog Index attempts to estimate the number of years of education necessary to understand a text based on average sentence length and the number of complex words.'
+            help_text = 'The Gunning Fog Index attempts to estimate the number of years of education\nnecessary to understand a text based on average sentence length and the number\nof complex words.'
         case 'SMOG Index':
-            help_text = 'The SMOG Index estimates the number of years of education necessary to understand a text based on the number of words with more than 2 syllables.'
+            help_text = 'The SMOG Index estimates the number of years of education necessary to understand\na text based on the number of words with more than 2 syllables.'
         case 'Spache Readability Formula':
-            help_text = 'The Spache Readability Formula compares a set of common words to the words in a text. The score is calculated based on the number of words per sentence and the percentage of unfamiliar words.'
+            help_text = 'The Spache Readability Formula compares a set of common words to the words in a text.\nThe score is calculated based on the number of words per sentence and the percentage of unfamiliar words.'
         case 'Linsear Write':
-            help_text = 'Linsear Write estimates the grade level of a text based on sentence length and the number of words with 2 or more syllables.'
+            help_text = 'Linsear Write estimates the grade level of a text based on sentence length and the\nnumber of words with 2 or more syllables.'
         case _ :
             help_text = 'hi'
     return help_text
@@ -100,21 +106,25 @@ def change_help_text(type):
 class HelpWindow(QWidget):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle('Text Analyzer Help')
+
         layout = QVBoxLayout()
         self.type_select = QComboBox()
         self.type_select.addItems(['Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'Spache Readability Formula', 'Linsear Write'])
         layout.addWidget(self.type_select)
-        self.type_select.currentTextChanged.connect(self.help_text_update(self.type_select.currentText))
         
         help_output = change_help_text(self.type_select.currentText)
         self.help_output_text = QLabel()
-        self.help_output_text.setText(help_output)
+        self.help_output_text.setText('Flesch-Kincaid is based on the length of words and sentences in the text.\nIt is based off grade levels in terms of the American education system.')
         layout.addWidget(self.help_output_text)
 
         self.setLayout(layout)
-    
-    def help_text_update(input):
-        change_help_text(input)
+        self.type_select.currentTextChanged.connect(self.help_text_update)
+
+    def help_text_update(self):
+        help_input = self.type_select.currentText()
+        help_output = change_help_text(help_input)
+        self.help_output_text.setText(str(help_output))
     
     
         
@@ -146,17 +156,17 @@ class Window(QMainWindow):
         self.help_button = QPushButton('Help')
         column2.addWidget(self.help_button)
         self.help_button.clicked.connect(self.show_help_window)
+
+        self.score_output = QLabel('N/A')
+        column2.addWidget(self.score_output)
+
+        self.grade_level_output = QLabel('N/A')
+        column2.addWidget(self.grade_level_output)
         
         widget = QWidget()
         widget.setLayout(row1)
         self.setCentralWidget(widget)
     
-    def transfer_to_read(self):
-        self.input_metric.blockSignals(True)
-        input_text_transfer = self.input_text.toPlainText()
-        input_metric_transfer = self.input_metric.currentText()
-
-        read_text(input_text_transfer, input_metric_transfer)
     
     def show_help_window(self, checked):
         global transfer_window
