@@ -166,7 +166,16 @@ class Window(QMainWindow):
         self.go_button.clicked.connect(self.outputs_update)
         
         # outputs
-        self.score_output = QLabel('Score Output: N/A')
+        self.word_count_output = QLabel('Word Count: N/A')
+        column2.addWidget(self.word_count_output)
+
+        self.char_count_output = QLabel('Character Count: N/A')
+        column2.addWidget(self.char_count_output)
+
+        self.sentence_count_output = QLabel('Sentence Count: N/A')
+        column2.addWidget(self.sentence_count_output)
+
+        self.score_output = QLabel('Score: N/A')
         column2.addWidget(self.score_output)
 
         self.grade_level_output = QLabel('Grade Level: N/A')
@@ -177,15 +186,6 @@ class Window(QMainWindow):
 
         self.ages_output = QLabel('Ages: N/A')
         column2.addWidget(self.ages_output)
-
-        self.word_count_output = QLabel('Word Count: N/A')
-        column2.addWidget(self.word_count_output)
-
-        self.char_count_output = QLabel('Character Count: N/A')
-        column2.addWidget(self.char_count_output)
-
-        self.sentence_count_output = QLabel('Sentence Count: N/A')
-        column2.addWidget(self.sentence_count_output)
 
         # help button, connected to show_help_window
         self.help_button = QPushButton('Help')
