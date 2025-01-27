@@ -96,7 +96,7 @@ def change_help_text(type):
         case 'SMOG Index':
             help_text = 'The SMOG Index estimates the number of years of education necessary to understand\na text based on the number of words with more than 2 syllables.'
         case 'Spache Readability Formula':
-            help_text = 'The Spache Readability Formula compares a set of common words to the words in a text.\nThe score is calculated based on the number of words per sentence and the percentage of unfamiliar words.'
+            help_text = 'The Spache Readability Formula compares a set of common words to\nthe words in a text. The score is calculated based on the number of words per sentence\nand the percentage of unfamiliar words.'
         case 'Linsear Write':
             help_text = 'Linsear Write estimates the grade level of a text based on sentence length and the\nnumber of words with 2 or more syllables.'
         case _ :
@@ -143,31 +143,46 @@ class Window(QMainWindow):
 
         self.input_text = QPlainTextEdit()
         column1.addWidget(self.input_text)
-        
-
-        self.go_button = QPushButton('Analyze')
-        column2.addWidget(self.go_button)
-        self.go_button.clicked.connect(self.transfer_to_read)
 
         self.input_metric = QComboBox()
         self.input_metric.addItems(['Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'SPACHE Readability Formula', 'Linsear Write'])
         column2.addWidget(self.input_metric)
+
+        self.go_button = QPushButton('Analyze')
+        column2.addWidget(self.go_button)
+        self.go_button.clicked.connect(self.outputs_update)
         
+        self.score_output = QLabel('Score Output: N/A')
+        column2.addWidget(self.score_output)
+
+        self.grade_level_output = QLabel('Grade Level: N/A')
+        column2.addWidget(self.grade_level_output)
+        
+        self.ease_output = QLabel('Ease: N/A')
+        column2.addWidget(self.ease_output)
+
+        self.ages_output = QLabel('Ages: N/A')
+        column2.addWidget(self.ages_output)
+
+        self.word_count_output = QLabel('Word Count: N/A')
+        column2.addWidget(self.word_count_output)
+
+        self.char_count_output = QLabel('Character Count: N/A')
+        column2.addWidget(self.char_count_output)
+
         self.help_button = QPushButton('Help')
         column2.addWidget(self.help_button)
         self.help_button.clicked.connect(self.show_help_window)
 
-        self.score_output = QLabel('N/A')
-        column2.addWidget(self.score_output)
-
-        self.grade_level_output = QLabel('N/A')
-        column2.addWidget(self.grade_level_output)
-        
         widget = QWidget()
         widget.setLayout(row1)
         self.setCentralWidget(widget)
     
-    
+    def outputs_update(self):
+        read_text_metric = self.input_metric.currentText()
+        read_text_input = self.input_text.toPlainText()
+        update_result = read_text(read_text_input, read_text_metric)
+
     def show_help_window(self, checked):
         global transfer_window
         transfer_window = HelpWindow()
