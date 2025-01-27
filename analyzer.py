@@ -7,19 +7,15 @@ import nltk
 nltk.download('punkt_tab')
 nltk.download('punkt')
 from nltk.tokenize import sent_tokenize
-from PySide6.QtWidgets import (QApplication, QWidget, QMainWindow, QPlainTextEdit, QComboBox, QLabel, QHBoxLayout, QVBoxLayout, QPushButton, QCheckBox)
+from PySide6.QtWidgets import (QApplication, QWidget, QMainWindow, QPlainTextEdit, QComboBox, QLabel, QHBoxLayout, QVBoxLayout, QPushButton, QCheckBox, QFileDialog)
 
 
 # function to read and analyze text
 def read_text(text, metric_type):
 
-    # identify the word count
-    word_count = len(text.split())
-
-    # only try to analyze the text if there are 100 or more words
-    if word_count >= 100:
+    # try to analyze the text, skip if not possible (if there are less than 100 words)
+    try:
         readability_analyze = Readability(text)
-
         match metric_type:
             case 'Flesch-Kincaid Grade Level':
                 fk = readability_analyze.flesch_kincaid()
@@ -70,10 +66,11 @@ def read_text(text, metric_type):
                 ease, ages = 'N/A', 'N/A'
             case _:
                 score, grade_level, ease, ages = 'N/A', 'N/A', 'N/A', 'N/A'
-    else:
+    except:
         score, grade_level, ease, ages = 'N/A', 'N/A', 'N/A', 'N/A'
 
-    # get the number of characters and sentences
+    # get the number of words, characters and sentences
+    word_count = len(text.split())
     char_count = len(text)
     sentence_count = len(sent_tokenize(text))
 
@@ -104,7 +101,7 @@ def change_help_text(type):
         case 'Linsear Write':
             help_text = 'Linsear Write estimates the grade level of a text based on sentence length and the\nnumber of words with 2 or more syllables.'
         case _ :
-            help_text = 'hi'
+            help_text = 'Error'
     return help_text
 
 # help window class
@@ -154,6 +151,11 @@ class Window(QMainWindow):
         # input text box
         self.input_text = QPlainTextEdit()
         column1.addWidget(self.input_text)
+
+        # open dialog to choose file
+        self.open_button = QPushButton("Open .txt file", self)
+        column1.addWidget(self.open_button)
+        self.open_button.clicked.connect(self.open_file)
 
         # choose readability index
         self.input_metric = QComboBox()
@@ -224,6 +226,23 @@ class Window(QMainWindow):
         global transfer_window
         transfer_window = HelpWindow()
         transfer_window.show()
+    
+    # function to open a .txt file
+    def open_file(self):
+
+        # get the file path, ignore the .txt filter
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open .txt file", "", "Text Files (*.txt)")
+
+        # if the file path exists
+        if file_path:
+
+            # try used for error handling
+            try:
+                # read the file and set the text
+                with open(file_path, "r") as file:
+                    self.input_text.setPlainText(file.read())
+            except:
+                self.input_text.setPlainText('Error reading file')
 
 application = QApplication(sys.argv)
 window = Window()
