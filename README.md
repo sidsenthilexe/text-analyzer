@@ -1,8 +1,13 @@
 # text-analyzer
-A python app that analyzes inputted text with various metrics.
+A Python app that analyzes inputted text with various metrics.
 
-# Requisites
-Readability `pip install py-readability-metrics`, `python -m nltk.downlader punkt`                          
+## Usage
+* Input your text in the left side, choose your readability index, and hit analyze!
+* Readability analysis will be skipped if the text has less than 100 words.
+* Open the help window for more information on how the different readability metrics work.
+
+## Requisites
+Readability `pip install py-readability-metrics`                         
 numpy `pip install numpy`               
-nltk `pip install nltk`
+nltk `pip install nltk`, `python -m nltk.downlader punkt` 
 
