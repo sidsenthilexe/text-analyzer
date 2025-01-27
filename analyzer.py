@@ -7,7 +7,7 @@ import nltk
 nltk.download('punkt_tab')
 nltk.download('punkt')
 from nltk.tokenize import sent_tokenize
-from PySide6.QtWidgets import (QApplication, QWidget, QMainWindow, QPlainTextEdit, QComboBox, QLabel, QHBoxLayout, QVBoxLayout, QPushButton, QCheckBox, QFileDialog)
+from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPlainTextEdit, QComboBox, QLabel, QHBoxLayout, QVBoxLayout, QPushButton, QFileDialog
 
 
 # function to read and analyze text
