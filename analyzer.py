@@ -196,6 +196,23 @@ class Window(QMainWindow):
         widget.setLayout(row1)
         self.setCentralWidget(widget)
     
+    # function to open a .txt file
+    def open_file(self):
+
+        # get the file path, ignore the .txt filter
+        file_path, _ = QFileDialog.getOpenFileName(self, "Open .txt file", "", "Text Files (*.txt)")
+
+        # if the file path exists
+        if file_path:
+
+            # try used for error handling
+            try:
+                # read the file and set the text
+                with open(file_path, "r") as file:
+                    self.input_text.setPlainText(file.read())
+            except:
+                self.input_text.setPlainText('Error reading file')
+
     # update all outputs based on the current text
     def outputs_update(self):
 
@@ -225,23 +242,6 @@ class Window(QMainWindow):
         global transfer_window
         transfer_window = HelpWindow()
         transfer_window.show()
-    
-    # function to open a .txt file
-    def open_file(self):
-
-        # get the file path, ignore the .txt filter
-        file_path, _ = QFileDialog.getOpenFileName(self, "Open .txt file", "", "Text Files (*.txt)")
-
-        # if the file path exists
-        if file_path:
-
-            # try used for error handling
-            try:
-                # read the file and set the text
-                with open(file_path, "r") as file:
-                    self.input_text.setPlainText(file.read())
-            except:
-                self.input_text.setPlainText('Error reading file')
 
 application = QApplication(sys.argv)
 window = Window()
