@@ -1,14 +1,13 @@
 # text analyzer in python
 
-# imports
-from readability import Readability
+# import
+from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPlainTextEdit, QComboBox, QLabel, QHBoxLayout, QVBoxLayout, QPushButton, QFileDialog
+from nltk.tokenize import sent_tokenize
 import sys
+from readability import Readability
 import nltk
 nltk.download('punkt_tab')
 nltk.download('punkt')
-from nltk.tokenize import sent_tokenize
-from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPlainTextEdit, QComboBox, QLabel, QHBoxLayout, QVBoxLayout, QPushButton, QFileDialog
-
 
 # function to read and analyze text
 def read_text(text, metric_type):
@@ -64,7 +63,7 @@ def read_text(text, metric_type):
                 score = round(lw.score, 3)
                 grade_level = lw.grade_level
                 ease, ages = 'N/A', 'N/A'
-            case _:
+            case _ :
                 score, grade_level, ease, ages = 'N/A', 'N/A', 'N/A', 'N/A'
     except:
         score, grade_level, ease, ages = 'N/A', 'N/A', 'N/A', 'N/A'
