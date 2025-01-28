@@ -161,12 +161,6 @@ class Window(QMainWindow):
         self.input_text = QPlainTextEdit()
         column1.addWidget(self.input_text)
 
-
-        # fix any spelling errors in the text
-        self.spelling_button = QPushButton("Check for and fix spelling errors", self)
-        column1.addWidget(self.spelling_button)
-        self.spelling_button.clicked.connect(self.spelling)
-
         # open dialog to choose file
         self.open_button = QPushButton("Open .txt file", self)
         column1.addWidget(self.open_button)
@@ -218,8 +212,6 @@ class Window(QMainWindow):
         widget = QWidget()
         widget.setLayout(row1)
         self.setCentralWidget(widget)
-    
-
         
     # function to open a .txt file
     def open_file(self):
