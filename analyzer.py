@@ -1,6 +1,7 @@
 # text analyzer in python
+# github.com/sidsenthilexe/text-analyzer
 
-# import
+# imports
 from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPlainTextEdit, QComboBox, QLabel, QHBoxLayout, QVBoxLayout, QPushButton, QFileDialog
 from nltk.tokenize import sent_tokenize
 import sys
@@ -88,23 +89,23 @@ def read_text(text, metric_type):
 def change_help_text(type):
     match type:
         case 'Flesch-Kincaid Grade Level':
-            help_text = 'Flesch-Kincaid is based on the length of words and sentences in the text.\nIt is based off grade levels in terms of the American education system.'
+            help_text = 'Flesch-Kincaid is based on the length of words and sentences in the text.\nIt is based off grade levels in terms of the American education system.\nAll Readability Analyses require 100+ words.'
         case 'Flesch Reading Ease':
             help_text = 'Flesch Reading Ease scores a text from 1-100 based on sentence and word lengths.\nScoring between 70 and 80 is roughly equivalent to an 8th grade level.'
         case 'Dale Chall Readability':
-            help_text = 'Dale Chall Readability utilises a list of 3,000 common words to calculate\nthe amount of difficult words in a text. A score of 6-7 is easily understood\nby a 7th or 8th grader.'
+            help_text = 'Dale Chall Readability utilises a list of 3,000 common words to calculate\nthe amount of difficult words in a text. A score of 6-7 is easily understood\nby a 7th or 8th grader.\nAll Readability Analyses require 100+ words.'
         case 'Automated Readability Index':
             help_text = 'The ARI uses a factor of characters per word, and the score is approximately\nthe grade level needed to understand the text.'
         case 'Coleman Liau Index':
-            help_text = 'The Coleman Liau Index uses the average number of letters and sentences per 100\nwords to approximate the grade level needed to understand the text.'
+            help_text = 'The Coleman Liau Index uses the average number of letters and sentences per 100\nwords to approximate the grade level needed to understand the text.\nAll Readability Analyses require 100+ words.'
         case 'Gunning Fog Index':
-            help_text = 'The Gunning Fog Index attempts to estimate the number of years of education\nnecessary to understand a text based on average sentence length and the number\nof complex words.'
+            help_text = 'The Gunning Fog Index attempts to estimate the number of years of education\nnecessary to understand a text based on average sentence length and the number\nof complex words.\nAll Readability Analyses require 100+ words.'
         case 'SMOG Index':
-            help_text = 'The SMOG Index estimates the number of years of education necessary to understand\na text based on the number of words with more than 2 syllables.'
+            help_text = 'The SMOG Index estimates the number of years of education necessary to understand\na text based on the number of words with more than 2 syllables.\nAll Readability Analyses require 100+ words.'
         case 'Spache Readability Formula':
-            help_text = 'The Spache Readability Formula compares a set of common words to\nthe words in a text. The score is calculated based on the number of words per sentence\nand the percentage of unfamiliar words.'
+            help_text = 'The Spache Readability Formula compares a set of common words to\nthe words in a text. The score is calculated based on the number of words per sentence\nand the percentage of unfamiliar words.\nAll Readability Analyses require 100+ words.'
         case 'Linsear Write':
-            help_text = 'Linsear Write estimates the grade level of a text based on sentence length and the\nnumber of words with 2 or more syllables.'
+            help_text = 'Linsear Write estimates the grade level of a text based on sentence length and the\nnumber of words with 2 or more syllables.\nAll Readability Analyses require 100+ words.'
         case 'Polarity':
             help_text = 'Polarity measures the sentiment of a text on a scale from -1 (very negative)\nto 1 (very positive).'
         case 'Subjectivity':
@@ -122,20 +123,18 @@ class HelpWindow(QWidget):
 
         layout = QVBoxLayout()
 
-        # list of readability indexes
+        # list of readability indexes and other output metrics, run help_text_update when changed
         self.type_select = QComboBox()
         self.type_select.addItems(['Polarity', 'Subjectivity', 'Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'Spache Readability Formula', 'Linsear Write'])
         layout.addWidget(self.type_select)
-        
+        self.type_select.currentTextChanged.connect(self.help_text_update)
+
         # label for the help text output
         self.help_output_text = QLabel()
         self.help_output_text.setText('Polarity measures the sentiment of a text on a scale from -1 (very negative)\nto 1 (very positive).')
         layout.addWidget(self.help_output_text)
 
         self.setLayout(layout)
-
-        # run help_text_update when the dropdown menu is changed
-        self.type_select.currentTextChanged.connect(self.help_text_update)
 
     # function to update the help text
     def help_text_update(self):
@@ -171,6 +170,7 @@ class Window(QMainWindow):
         self.input_metric.addItems(['Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'SPACHE Readability Formula', 'Linsear Write'])
         column2.addWidget(self.input_metric)
 
+        # update the outputs with the analysis
         self.go_button = QPushButton('Analyze')
         column2.addWidget(self.go_button)
         self.go_button.clicked.connect(self.outputs_update)
@@ -230,7 +230,7 @@ class Window(QMainWindow):
             except:
                 self.input_text.setPlainText('Error reading file')
 
-    # update all outputs based on the current text
+    # update all outputs based on the current inputs
     def outputs_update(self):
 
         # get the current requested metric
@@ -245,7 +245,7 @@ class Window(QMainWindow):
         # format the output (list)
         score, grade_level, ease, ages, word_count, char_count, sentence_count, sentiment_polarity, sentiment_subjectivity = update_result
 
-        # set all the labels to the outputs
+        # set all the labels to the outputs (not in order what did you expect)
         self.score_output.setText('Score: '+str(score))
         self.grade_level_output.setText('Grade Level: '+str(grade_level))
         self.ease_output.setText('Ease: '+str(ease))
@@ -262,6 +262,7 @@ class Window(QMainWindow):
         transfer_window = HelpWindow()
         transfer_window.show()
 
+# window init stuff
 application = QApplication(sys.argv)
 window = Window()
 window.show()
