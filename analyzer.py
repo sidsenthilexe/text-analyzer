@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QApplication, QWidget, QMainWindow, QPlainTextEdit
 from nltk.tokenize import sent_tokenize
 import sys
 from readability import Readability
+from textblob import TextBlob
 import nltk
 nltk.download('punkt_tab')
 nltk.download('punkt')
@@ -73,8 +74,13 @@ def read_text(text, metric_type):
     char_count = len(text)
     sentence_count = len(sent_tokenize(text))
 
+    # get the sentiment
+    textblob_analyze = TextBlob(text)
+    sentiment_polarity = round(textblob_analyze.polarity, 3)
+    sentiment_subjectivity = round(textblob_analyze.subjectivity, 3)
+
     # output everything as a list
-    output = [score, grade_level, ease, ages, word_count, char_count, sentence_count]
+    output = [score, grade_level, ease, ages, word_count, char_count, sentence_count, sentiment_polarity, sentiment_subjectivity]
 
     return output
     
@@ -99,6 +105,10 @@ def change_help_text(type):
             help_text = 'The Spache Readability Formula compares a set of common words to\nthe words in a text. The score is calculated based on the number of words per sentence\nand the percentage of unfamiliar words.'
         case 'Linsear Write':
             help_text = 'Linsear Write estimates the grade level of a text based on sentence length and the\nnumber of words with 2 or more syllables.'
+        case 'Polarity':
+            help_text = 'Polarity measures the sentiment of a text on a scale from -1 (very negative)\nto 1 (very positive).'
+        case 'Subjectivity':
+            help_text = 'Subjectivity measures how a statement expresses opinions, rather than objective facts.\nIt ranges from 0 (completely objective) to 1 (completely subjective).'
         case _ :
             help_text = 'Error'
     return help_text
@@ -114,12 +124,12 @@ class HelpWindow(QWidget):
 
         # list of readability indexes
         self.type_select = QComboBox()
-        self.type_select.addItems(['Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'Spache Readability Formula', 'Linsear Write'])
+        self.type_select.addItems(['Polarity', 'Subjectivity', 'Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'Spache Readability Formula', 'Linsear Write'])
         layout.addWidget(self.type_select)
         
         # label for the help text output
         self.help_output_text = QLabel()
-        self.help_output_text.setText('Flesch-Kincaid is based on the length of words and sentences in the text.\nIt is based off grade levels in terms of the American education system.')
+        self.help_output_text.setText('Polarity measures the sentiment of a text on a scale from -1 (very negative)\nto 1 (very positive).')
         layout.addWidget(self.help_output_text)
 
         self.setLayout(layout)
@@ -151,12 +161,18 @@ class Window(QMainWindow):
         self.input_text = QPlainTextEdit()
         column1.addWidget(self.input_text)
 
+
+        # fix any spelling errors in the text
+        self.spelling_button = QPushButton("Check for and fix spelling errors", self)
+        column1.addWidget(self.spelling_button)
+        self.spelling_button.clicked.connect(self.spelling)
+
         # open dialog to choose file
         self.open_button = QPushButton("Open .txt file", self)
         column1.addWidget(self.open_button)
         self.open_button.clicked.connect(self.open_file)
 
-        # choose readability index
+        # choose analysis metric
         self.input_metric = QComboBox()
         self.input_metric.addItems(['Flesch-Kincaid Grade Level', 'Flesch Reading Ease', 'Dale Chall Readability', 'Automated Readability Index', 'Coleman Liau Index', 'Gunning Fog Index', 'SMOG Index', 'SPACHE Readability Formula', 'Linsear Write'])
         column2.addWidget(self.input_metric)
@@ -174,6 +190,13 @@ class Window(QMainWindow):
 
         self.sentence_count_output = QLabel('Sentence Count: N/A')
         column2.addWidget(self.sentence_count_output)
+
+        
+        self.polarity_output = QLabel('Polarity: N/A')
+        column2.addWidget(self.polarity_output)
+
+        self.subjectivity_output = QLabel('Subjectivity: N/A')
+        column2.addWidget(self.subjectivity_output)
 
         self.score_output = QLabel('Score: N/A')
         column2.addWidget(self.score_output)
@@ -196,6 +219,8 @@ class Window(QMainWindow):
         widget.setLayout(row1)
         self.setCentralWidget(widget)
     
+
+        
     # function to open a .txt file
     def open_file(self):
 
@@ -226,7 +251,7 @@ class Window(QMainWindow):
         update_result = read_text(read_text_input, read_text_metric)
 
         # format the output (list)
-        score, grade_level, ease, ages, word_count, char_count, sentence_count = update_result
+        score, grade_level, ease, ages, word_count, char_count, sentence_count, sentiment_polarity, sentiment_subjectivity = update_result
 
         # set all the labels to the outputs
         self.score_output.setText('Score: '+str(score))
@@ -236,6 +261,8 @@ class Window(QMainWindow):
         self.word_count_output.setText('Word Count: '+str(word_count))
         self.char_count_output.setText('Character Count: '+str(char_count))
         self.sentence_count_output.setText('Sentence Count: '+str(sentence_count))
+        self.polarity_output.setText('Polarity: '+str(sentiment_polarity))
+        self.subjectivity_output.setText('Subjectivity: '+str(sentiment_subjectivity))
 
     # function to show the help window
     def show_help_window(self, checked):
