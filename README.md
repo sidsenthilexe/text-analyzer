@@ -8,7 +8,8 @@ A Python app that analyzes inputted text with various metrics.
 * Open the help window for more information on how the different readability metrics work.
 
 ## Requisites
-Readability `pip install py-readability-metrics`                         
+Readability `pip install py-readability-metrics`    
+TextBlob `pip install textblob`   
 numpy `pip install numpy`               
 nltk `pip install nltk`, `python -m nltk.downlader punkt` 
 
